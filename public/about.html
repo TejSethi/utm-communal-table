@@ -1,0 +1,120 @@
+<!-- about.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Character encoding -->
+  <meta charset="utf-8" />
+
+  <!-- adjusting to  phones-->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Title shown in the browser tab -->
+  <title>About Us • UTM Communal Table</title>
+
+  <!-- Link to Css file -->
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body>
+  <!-- Top navigation bar area -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <!-- project logo text -->
+      <div class="brand">UTM Communal Table</div>
+
+      <!-- Main navigation links -->
+      <nav class="nav" aria-label="Primary">
+        <!-- Relative links to index and demo page -->
+        <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./demo.html">Project Demo</a>
+
+        <!-- line to about page-->
+        <a class="nav__link nav__link--active" href="./about.html">About Us</a>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero banner section  -->
+  <main class="page-hero page-hero--about">
+    <!-- Overlay is just a visual layer  -->
+    <div class="page-hero__overlay" aria-hidden="true"></div>
+
+    <!-- Hero text content -->
+    <div class="page-hero__content">
+      <h1 class="page-hero__title">About Us</h1>
+    </div>
+  </main>
+
+  <!--  strip section for a short tagline -->
+  <section class="about-strip">
+    <div class="about-strip__inner">Don't Sleep for Dinner</div>
+  </section>
+
+  <!-- image on one side and text on the other -->
+  <section class="about-split">
+    <div class="about-split__inner">
+      <!-- Media column -->
+      <div class="about-split__media">
+        <!-- chart  image -->
+        <img class="about-split__chart" src="./img/about2.png" alt="Visitor volume chart" />
+      </div>
+
+      <!-- Text column -->
+      <div class="about-split__text">
+        <h2 class="about-split__title">We All Need to Eat</h2>
+
+        <!-- Paragraph explaining the project mission-->
+        <p class="about-split__copy">
+          Students across campus routinely use our service to put food on their table year round.
+          Our community functions because of volunteers and charitable donations from neighbors in
+          residence to our classmates on campus. We all deserve to learn on a full stomach.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Feature cards section -->
+  <section class="features">
+    <div class="features__inner">
+      <!-- Each article is one feature card -->
+      <article class="feature">
+        <img class="feature__img" src="./img/about3.jpg" alt="Verify easily" />
+        <h3 class="feature__title">Verify Easily</h3>
+        <p class="feature__copy">Students can easily verify their status online and on-the-go.</p>
+      </article>
+
+      <article class="feature">
+        <img class="feature__img" src="./img/about4.jpg" alt="Convenient pickup" />
+        <h3 class="feature__title">Convenient Pickup</h3>
+        <p class="feature__copy">Nutritious food available anytime, anywhere on campus.</p>
+      </article>
+
+      <article class="feature">
+        <img class="feature__img" src="./img/about5.jpg" alt="Unpack essentials" />
+        <h3 class="feature__title">Unpack Essentials</h3>
+        <p class="feature__copy">Grab what you need, Share what you can.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Footer at the bottom of the page -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <!-- Footer navigation -->
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a href="./index.html">Home</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./demo.html">Demo</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./about.html">About</a>
+      </nav>
+
+      <!-- Team member names (using &nbsp; for spacing) -->
+      <div class="site-footer__names">
+        Tej Sethi&nbsp;&nbsp;&nbsp;Ethan Welch&nbsp;&nbsp;&nbsp;Prajna Pendharkar
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

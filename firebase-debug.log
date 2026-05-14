@@ -1,0 +1,67 @@
+[debug] [2026-04-20T20:07:18.126Z] ----------------------------------------------------------------------
+[debug] [2026-04-20T20:07:18.128Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\rseth\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2026-04-20T20:07:18.128Z] CLI Version:   15.11.0
+[debug] [2026-04-20T20:07:18.128Z] Platform:      win32
+[debug] [2026-04-20T20:07:18.128Z] Node Version:  v24.14.0
+[debug] [2026-04-20T20:07:18.128Z] Time:          Mon Apr 20 2026 16:07:18 GMT-0400 (Eastern Daylight Time)
+[debug] [2026-04-20T20:07:18.128Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-04-20T20:07:18.977Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-04-20T20:07:18.977Z] > authorizing via signed-in user (tejnicholas@gmail.com)
+[debug] [2026-04-20T20:07:18.978Z] [iam] checking project utm-tej-prpject for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-04-20T20:07:18.978Z] Checked if tokens are valid: false, expires at: 1774319946303
+[debug] [2026-04-20T20:07:18.978Z] Checked if tokens are valid: false, expires at: 1774319946303
+[debug] [2026-04-20T20:07:18.978Z] > refreshing access token with scopes: []
+[debug] [2026-04-20T20:07:18.981Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2026-04-20T20:07:18.981Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-04-20T20:07:19.125Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2026-04-20T20:07:19.125Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2026-04-20T20:07:19.130Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions [none]
+[debug] [2026-04-20T20:07:19.130Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions  x-goog-user-project=utm-tej-prpject
+[debug] [2026-04-20T20:07:19.130Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-04-20T20:07:19.370Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions 403
+[debug] [2026-04-20T20:07:19.371Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions {"error":{"code":403,"message":"Caller does not have required permission to use project utm-tej-prpject. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject and then retry. Propagation of the new permission may take a few minutes.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"USER_PROJECT_DENIED","domain":"googleapis.com","metadata":{"service":"cloudresourcemanager.googleapis.com","consoleUrl":"https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject","consumer":"projects/utm-tej-prpject","containerInfo":"utm-tej-prpject"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Caller does not have required permission to use project utm-tej-prpject. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject and then retry. Propagation of the new permission may take a few minutes."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developer console IAM admin","url":"https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject"}]}]}}
+[debug] [2026-04-20T20:07:19.371Z] [iam] error while checking permissions, command may fail: Request to https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions had HTTP Error: 403, Caller does not have required permission to use project utm-tej-prpject. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject and then retry. Propagation of the new permission may take a few minutes.
+[debug] [2026-04-20T20:07:19.372Z] Checked if tokens are valid: true, expires at: 1776719238125
+[debug] [2026-04-20T20:07:19.372Z] Checked if tokens are valid: true, expires at: 1776719238125
+[debug] [2026-04-20T20:07:19.372Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject [none]
+[debug] [2026-04-20T20:07:19.590Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject 403
+[debug] [2026-04-20T20:07:19.590Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2026-04-20T20:07:19.590Z] Request to https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject had HTTP Error: 403, The caller does not have permission
+[debug] [2026-04-20T20:07:19.679Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject had HTTP Error: 403, The caller does not have permission
+    at responseToError (C:\Users\rseth\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:53:12)
+    at RetryOperation._fn (C:\Users\rseth\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:333:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[error] 
+[error] Error: Failed to get Firebase project utm-tej-prpject. Please make sure the project exists and your account has permission to access it.
+[debug] [2026-04-20T20:08:07.219Z] ----------------------------------------------------------------------
+[debug] [2026-04-20T20:08:07.221Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\rseth\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2026-04-20T20:08:07.221Z] CLI Version:   15.15.0
+[debug] [2026-04-20T20:08:07.221Z] Platform:      win32
+[debug] [2026-04-20T20:08:07.221Z] Node Version:  v24.14.0
+[debug] [2026-04-20T20:08:07.221Z] Time:          Mon Apr 20 2026 16:08:07 GMT-0400 (Eastern Daylight Time)
+[debug] [2026-04-20T20:08:07.221Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-04-20T20:08:08.342Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-04-20T20:08:08.343Z] > authorizing via signed-in user (tejnicholas@gmail.com)
+[debug] [2026-04-20T20:08:08.343Z] [iam] checking project utm-tej-prpject for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2026-04-20T20:08:08.345Z] Checked if tokens are valid: true, expires at: 1776719238125
+[debug] [2026-04-20T20:08:08.345Z] Checked if tokens are valid: true, expires at: 1776719238125
+[debug] [2026-04-20T20:08:08.346Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions [none]
+[debug] [2026-04-20T20:08:08.346Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions  x-goog-user-project=utm-tej-prpject
+[debug] [2026-04-20T20:08:08.346Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2026-04-20T20:08:08.678Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions 403
+[debug] [2026-04-20T20:08:08.678Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions {"error":{"code":403,"message":"Caller does not have required permission to use project utm-tej-prpject. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject and then retry. Propagation of the new permission may take a few minutes.","status":"PERMISSION_DENIED","details":[{"@type":"type.googleapis.com/google.rpc.ErrorInfo","reason":"USER_PROJECT_DENIED","domain":"googleapis.com","metadata":{"consumer":"projects/utm-tej-prpject","containerInfo":"utm-tej-prpject","consoleUrl":"https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject","service":"cloudresourcemanager.googleapis.com"}},{"@type":"type.googleapis.com/google.rpc.LocalizedMessage","locale":"en-US","message":"Caller does not have required permission to use project utm-tej-prpject. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject and then retry. Propagation of the new permission may take a few minutes."},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"description":"Google developer console IAM admin","url":"https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject"}]}]}}
+[debug] [2026-04-20T20:08:08.679Z] [iam] error while checking permissions, command may fail: Request to https://cloudresourcemanager.googleapis.com/v1/projects/utm-tej-prpject:testIamPermissions had HTTP Error: 403, Caller does not have required permission to use project utm-tej-prpject. Grant the caller the roles/serviceusage.serviceUsageConsumer role, or a custom role with the serviceusage.services.use permission, by visiting https://console.developers.google.com/iam-admin/iam?project=utm-tej-prpject and then retry. Propagation of the new permission may take a few minutes.
+[debug] [2026-04-20T20:08:08.679Z] Checked if tokens are valid: true, expires at: 1776719238125
+[debug] [2026-04-20T20:08:08.679Z] Checked if tokens are valid: true, expires at: 1776719238125
+[debug] [2026-04-20T20:08:08.680Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject [none]
+[debug] [2026-04-20T20:08:08.890Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject 403
+[debug] [2026-04-20T20:08:08.890Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2026-04-20T20:08:08.890Z] Request to https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject had HTTP Error: 403, The caller does not have permission
+[debug] [2026-04-20T20:08:08.980Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/utm-tej-prpject had HTTP Error: 403, The caller does not have permission
+    at responseToError (C:\Users\rseth\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:53:12)
+    at RetryOperation._fn (C:\Users\rseth\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:333:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[error] 
+[error] Error: Failed to get Firebase project utm-tej-prpject. Please make sure the project exists and your account has permission to access it.
