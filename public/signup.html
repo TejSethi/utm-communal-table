@@ -1,0 +1,282 @@
+<!-- signup.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Create Profile • UTM Communal Table</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body class="auth-page">
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="brand">UTM Communal Table</div>
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./">Home</a>
+        <a class="nav__link" href="./demo.html">Project Demo</a>
+        <a class="nav__link" href="./about.html">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="auth-wrap">
+    <section class="auth-card" aria-label="Create profile">
+      <div class="auth-card__head">UTM Communal Table</div>
+
+      <form class="auth-card__body" id="signupForm" autocomplete="on">
+        <!-- First name -->
+        <div>
+          <div class="auth-label-row">
+            <span>First name</span>
+            <span class="auth-hint">optional</span>
+          </div>
+          <input class="auth-input" id="first" type="text" placeholder="First name" />
+        </div>
+
+        <!-- Last name -->
+        <div>
+          <div class="auth-label-row">
+            <span>Last name</span>
+            <span class="auth-hint">optional</span>
+          </div>
+          <input class="auth-input" id="last" type="text" placeholder="Last name" />
+        </div>
+
+        <!-- Email -->
+        <div>
+          <div class="auth-label-row">
+            <span>UofT Email</span>
+            <span class="auth-hint">@mail.utoronto.ca / @utoronto.ca / @cs.toronto.edu</span>
+          </div>
+
+          <input
+            class="auth-input"
+            id="email"
+            type="email"
+            placeholder="name@mail.utoronto.ca"
+            required
+          />
+        </div>
+
+        <!-- Postal code (REQUIRED) -->
+        <div>
+          <div class="auth-label-row">
+            <span>Postal code</span>
+            <span class="auth-hint">GTA only (e.g., M5S 1A1)</span>
+          </div>
+
+          <input
+            class="auth-input"
+            id="postal"
+            type="text"
+            placeholder="M5S 1A1"
+            required
+          />
+        </div>
+
+        <!-- Password -->
+        <div>
+          <div class="auth-label-row">
+            <span>Password</span>
+            <span class="auth-hint">min 6</span>
+          </div>
+
+          <input
+            class="auth-input"
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            minlength="6"
+            required
+          />
+        </div>
+
+        <!-- Confirm password -->
+        <div>
+          <div class="auth-label-row">
+            <span>Confirm password</span>
+            <span class="auth-hint">match</span>
+          </div>
+
+          <input
+            class="auth-input"
+            id="password2"
+            type="password"
+            placeholder="••••••••"
+            minlength="6"
+            required
+          />
+        </div>
+
+        <button class="auth-btn" type="submit">Create profile</button>
+
+        <div id="msg" class="auth-hint auth-msg" aria-live="polite"></div>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="./login.html">Log in</a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    const PROFILE_KEY = "utm_profile";
+    const NEXT_KEY = "utm_next";
+
+    import { auth, db } from "./js/firebase.js";
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    function setMsg(text) {
+      const el = document.getElementById("msg");
+      if (!el) return;
+      el.textContent = text || "";
+    }
+
+    function normalizeEmail(email) {
+      return String(email || "").trim().toLowerCase();
+    }
+
+    function isAllowedUofTEmail(email) {
+      const e = normalizeEmail(email);
+      const allowed = ["@mail.utoronto.ca", "@utoronto.ca", "@cs.toronto.edu"];
+      return allowed.some((d) => e.endsWith(d));
+    }
+
+    function roleFromEmail(email) {
+      const e = normalizeEmail(email);
+      if (e.endsWith("@mail.utoronto.ca")) return "Student";
+      return "Professor";
+    }
+
+    // Normalize postal to "A1A1A1" and validate Canadian postal pattern
+    function normalizePostal(postal) {
+      return String(postal || "").toUpperCase().replace(/\s+/g, "");
+    }
+
+    function isValidCanadianPostal(p6) {
+      // basic Canadian postal format: A1A1A1
+      return /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]\d[ABCEGHJ-NPRSTV-Z]\d$/.test(p6);
+    }
+
+    function isGtaPostal(p6) {
+      // Toronto postal codes start with M; Peel starts with L.
+      return p6.startsWith("M") || p6.startsWith("L");
+    }
+
+    function formatPostal(p6) {
+      // adding a space in the middle
+      return p6.length === 6 ? (p6.slice(0, 3) + " " + p6.slice(3)) : p6;
+    }
+
+    async function ensureUserDocOnSignup(user, profile) {
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+
+      if (!snap.exists()) {
+        await setDoc(ref, {
+          email: String(profile.email || ""),
+          first: String(profile.first || ""),
+          last: String(profile.last || ""),
+          postal: String(profile.postal || ""),
+          role: String(profile.role || "Student"),
+          points: 0,
+          saves:0,
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp(),
+        });
+        return;
+      }
+
+      await setDoc(ref, {
+        email: String(profile.email || ""),
+        first: String(profile.first || ""),
+        last: String(profile.last || ""),
+        postal: String(profile.postal || ""),
+        role: String(profile.role || "Student"),
+        updatedAt: serverTimestamp(),
+      }, { merge: true });
+    }
+
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setMsg("");
+
+      const first = String(document.getElementById("first").value || "").trim();
+      const last = String(document.getElementById("last").value || "").trim();
+      const email = normalizeEmail(document.getElementById("email").value);
+      const postalRaw = String(document.getElementById("postal").value || "").trim();
+      const pw1 = String(document.getElementById("password").value || "");
+      const pw2 = String(document.getElementById("password2").value || "");
+
+      if (!email || !email.includes("@")) {
+        setMsg("Please enter a valid email.");
+        return;
+      }
+      if (!isAllowedUofTEmail(email)) {
+        setMsg("Please use a UofT email: @mail.utoronto.ca, @utoronto.ca, or @cs.toronto.edu.");
+        return;
+      }
+
+      const p6 = normalizePostal(postalRaw);
+      if (!p6) {
+        setMsg("Postal code is required.");
+        return;
+      }
+      if (!isValidCanadianPostal(p6)) {
+        setMsg("Please enter a valid Canadian postal code (e.g., M5S 1A1).");
+        return;
+      }
+      if (!isGtaPostal(p6)) {
+        setMsg("Please use a Toronto-area postal code (start with M or L).");
+        return;
+      }
+
+      if (pw1.length < 6) {
+        setMsg("Password must be at least 6 characters.");
+        return;
+      }
+      if (pw1 !== pw2) {
+        setMsg("Passwords do not match.");
+        return;
+      }
+
+      const role = roleFromEmail(email);
+
+      const profile = {
+        first,
+        last,
+        email,
+        postal: formatPostal(p6),
+        role,
+      };
+
+      let cred;
+      try {
+        cred = await createUserWithEmailAndPassword(auth, email, pw1);
+      } catch (err) {
+        const code = String(err?.code || "");
+        if (code === "auth/email-already-in-use") setMsg("This email is already registered. Please log in.");
+        else if (code === "auth/invalid-email") setMsg("Please enter a valid email.");
+        else if (code === "auth/weak-password") setMsg("Password must be at least 6 characters.");
+        else setMsg("Could not create account.");
+        return;
+      }
+
+      try {
+        await ensureUserDocOnSignup(cred.user, profile);
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      } catch (err) {
+        console.error("Profile save failed:", err);
+        setMsg("Account created, but profile save failed.");
+        return;
+      }
+
+      const next = localStorage.getItem(NEXT_KEY) || "./demo.html";
+      try { localStorage.removeItem(NEXT_KEY); } catch {}
+      window.location.href = next;
+    });
+  </script>
+</body>
+</html>

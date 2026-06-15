@@ -1,0 +1,186 @@
+<!-- submit.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Page metadata -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Browser tab title -->
+  <title>Create Post • UTM Communal Table</title>
+
+  <!-- Global stylesheet -->
+  <link rel="stylesheet" href="./css/styles.css" />
+
+  <!-- Petite Vue library -->
+  <script src="https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.iife.js" defer></script>
+
+  <!-- Submit page logic -->
+  <script type="module" src="./js/submit.petite.js" defer></script>
+
+  <!-- Global app helpers -->
+  <script type="module" src="./js/app.js" defer></script>
+</head>
+
+<body class="app-shell" data-page="submit">
+  <!-- Top header -->
+  <header class="topbar topbar--solid">
+    <div class="topbar__inner">
+      <!-- Brand label -->
+      <div class="brand">UTM Communal Table</div>
+
+      <!-- Top navigation -->
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./">Home</a>
+        <a class="nav__link" href="./demo.html">Project Demo</a>
+        <a class="nav__link" href="./about.html">About Us</a>
+
+        <!-- Cart link and badge -->
+        <a class="nav__icon" id="cartBtn" href="./cart.html" aria-label="Cart">
+          🛒 <span id="cartCount" aria-label="Items in cart">(0)</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Submit page layout -->
+  <main class="create" v-scope="SubmitApp()">
+    <!-- Form panel -->
+    <section class="create__form">
+      <!-- Form header -->
+      <div class="create__head">
+        <h1 class="create__title">Donate Food</h1>
+        <a class="create__close" href="./demo.html" aria-label="Close">×</a>
+      </div>
+
+      <!-- Photo upload -->
+      <label class="photo-box" for="photoInput">
+        <div class="photo-box__icon">🖼</div>
+        <div class="photo-box__text">Add Photos</div>
+
+        <input
+          id="photoInput"
+          name="photo"
+          class="photo-input"
+          type="file"
+          accept="image/*"
+          @change="onPickImage($event)"
+        />
+      </label>
+
+      <!-- Form hint -->
+      <div class="req">
+        <div class="req__title">Required</div>
+        <div class="req__sub">Be as descriptive as possible</div>
+      </div>
+
+      <!-- Creating the  post form -->
+      <form class="create-form" id="createForm" autocomplete="on" @submit.prevent="submitPost()">
+        <!-- Main fields -->
+        <input id="titleInput" name="title" class="field" type="text" placeholder="Title" required v-model="title" />
+        <input id="descInput" name="desc" class="field" type="text" placeholder="Description" required v-model="desc" />
+        <input id="qtyInput" name="qty" class="field" type="number" placeholder="Quantity" min="1" required v-model.number="qty" />
+        <input id="expInput" name="exp" class="field" type="date" required v-model="exp" :min="today" />      
+        <select id="locInput" name="loc" class="field" required v-model="loc">
+          <option value="" disabled>Select Pick Up Location</option>
+          <option>DV Cafeteria</option>
+          <option>IB Lobby</option>
+          <option>Library Entrance</option>
+        </select>
+
+        <!-- Diet tags -->
+        <div class="chips-block">
+          <div class="chips-title">Dietary Restrictions</div>
+
+          <div class="chips" id="dietChips">
+            <label class="chip"><input type="checkbox" value="Vegetarian" v-model="diets" /> Vegetarian</label>
+            <label class="chip"><input type="checkbox" value="Vegan" v-model="diets" /> Vegan</label>
+            <label class="chip"><input type="checkbox" value="Gluten-Free" v-model="diets" /> Gluten-Free</label>
+            <label class="chip"><input type="checkbox" value="Nut-Free" v-model="diets" /> Nut-Free</label>
+            <label class="chip"><input type="checkbox" value="Dairy-Free" v-model="diets" /> Dairy-Free</label>
+            <label class="chip"><input type="checkbox" value="Keto" v-model="diets" /> Keto</label>
+            <label class="chip"><input type="checkbox" value="Halal" v-model="diets" /> Halal</label>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button class="post-btn" type="submit">Post</button>
+      </form>
+    </section>
+
+    <!-- Preview panel -->
+    <section class="create__preview">
+      <!-- Preview header -->
+      <div class="preview__label">Preview</div>
+
+      <!-- Preview card -->
+      <article class="preview-card">
+        <!-- Preview image -->
+        <div
+          id="previewImg"
+          class="preview-img"
+          :style="{
+            backgroundImage: `url('${imgPreviewDataUrl || './img/tomato.png'}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }"
+        >
+        </div>
+
+        <div class="preview-body">
+          <div class="preview-top">
+            <div class="preview-top__spacer"></div>
+            <button class="heart" type="button" aria-label="Save" disabled>♡</button>
+          </div>
+
+          <!-- Preview text -->
+          <div class="preview-lines">
+            <div id="previewTitle" class="preview-line preview-line--bold">{{ title || "Title" }}</div>
+            <div id="previewDesc" class="preview-line">{{ desc || "Description" }}</div>
+            <div id="previewQty" class="preview-line">{{ qty ? ("Quantity: " + qty) : "Quantity" }}</div>
+            <div id="previewExp" class="preview-line">{{ exp ? ("Expiry: " + exp) : "Expiry" }}</div>
+          </div>
+
+          <!-- Preview diets -->
+          <div class="preview-diet">
+            <div class="preview-diet__label">Dietary Restrictions</div>
+            <div id="previewPills" class="preview-pills">
+              <span class="pill" v-for="d in diets" :key="d">{{ d }}</span>
+            </div>
+          </div>
+
+          <!-- Preview pickup -->
+          <div class="pickup">
+            <div class="pickup__left">
+              <div class="pickup__title">Pickup at</div>
+              <div id="previewPickup" class="pickup__sub">
+                {{ (loc && time) ? (loc + " • " + time) : (loc || time || "Before") }}
+              </div>
+            </div>
+
+            <!-- Demo button -->
+            <button class="claim-btn" type="button" disabled>Claim Now</button>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a href="./">Home</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./demo.html">Demo</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./about.html">About</a>
+      </nav>
+
+      <div class="site-footer__names">
+        Tej Sethi&nbsp;&nbsp;&nbsp;Ethan Welch&nbsp;&nbsp;&nbsp;Prajna Pendharkar
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

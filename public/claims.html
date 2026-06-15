@@ -1,0 +1,150 @@
+<!-- claims.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Claims • UTM Communal Table</title>
+
+  <link rel="stylesheet" href="./css/styles.css" />
+
+  <script src="https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.iife.js" defer></script>
+  <script type="module" src="./js/claims.petite.js" defer></script>
+  <script type="module" src="./js/app.js" defer></script>
+</head>
+
+<body class="app-shell" data-page="claims">
+  <header class="topbar topbar--solid">
+    <div class="topbar__inner">
+      <div class="brand">UTM Communal Table</div>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./">Home</a>
+        <a class="nav__link" href="./demo.html">Project Demo</a>
+        <a class="nav__link" href="./about.html">About Us</a>
+        <a class="nav__icon" id="cartBtn" href="./cart.html" aria-label="Cart">
+          🛒 <span id="cartCount" aria-label="Items in cart">(0)</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="page">
+    <!-- Claims app mount point -->
+    <main class="board" v-scope="ClaimsApp()" v-effect="init()">
+      <aside class="board__side">
+        <a class="side-link side-link--top" href="./submit.html">
+          <span class="side-ic">✎</span>
+          <span>Create Post</span>
+        </a>
+
+        <nav class="side-nav2" aria-label="App navigation">
+          <a class="side-link" href="./demo.html">
+            <span class="side-ic">⌂</span><span>Home</span>
+          </a>
+
+          <a class="side-link side-link--active" href="./claims.html">
+            <span class="side-ic">☐</span><span>Claims</span>
+          </a>
+
+          <a class="side-link" href="./impact.html">
+            <span class="side-ic">🏆</span><span>Impact</span>
+          </a>
+
+          <a class="side-link" href="./account.html">
+            <span class="side-ic">👤</span><span>Account</span>
+          </a>
+
+          <a class="side-link" href="#" data-logout>
+            <span class="side-ic">⤴</span><span>Logout</span>
+          </a>
+        </nav>
+      </aside>
+
+      <section class="board__main">
+        <div class="claims-header">
+          <div>
+            <h2 class="claims-title">Your order is ready to be picked up</h2>
+            <p class="claims-sub">Your Claims</p>
+            <div class="claims-count">{{ claims.length }} total</div>
+          </div>
+        </div>
+
+        <div class="panel" v-if="claims.length === 0">
+          <h3 class="panel-title">No claims yet</h3>
+          <p class="small">After you press Continue in the cart, your claim will appear here.</p>
+          <a class="btn btn--primary" href="./cart.html">Go to cart</a>
+        </div>
+
+        <article
+          class="claim-card-wide"
+          aria-label="Current claim card"
+          v-for="c in activeClaims"
+          :key="c.id"
+        >
+          <img v-if="claimImg(c)" class="claim-img" :src="claimImg(c)" :alt="claimTitle(c)" />
+
+          <div>
+            <div class="claim-title">{{ claimTitle(c) }}</div>
+
+            <div class="claim-meta">
+              <div>🕒 {{ claimTimeText(c) }}</div>
+              <div>Qty {{ claimQtyTotal(c) }}</div>
+            </div>
+
+            <div class="claim-status">
+              <span class="dot" aria-hidden="true"></span>
+              <span>{{ c.status }}</span>
+            </div>
+
+            <p class="small small--tight" v-if="claimItemsText(c)">
+              Includes: {{ claimItemsText(c) }}
+            </p>
+          </div>
+
+          <div class="claim-actions">
+            <button class="btn btn--secondary" type="button" @click="markPickedUp(c)">Mark picked up</button>
+            <button class="btn btn--secondary" type="button" @click="cancel(c)">Cancel</button>
+          </div>
+        </article>
+
+        <div class="panel" v-if="claims.length > 0 && activeClaims.length === 0">
+          <h3 class="panel-title">No active pickups</h3>
+          <p class="small">You have no claims currently marked Ready for pickup.</p>
+        </div>
+
+        <h3 class="history-section-title" v-if="history.length > 0">Claim history</h3>
+
+        <div class="history-list" aria-label="Claim history list" v-if="history.length > 0">
+          <div class="history-item" v-for="c in history" :key="c.id">
+            <div class="history-left">
+              <div class="history-name">{{ historyTitle(c) }}</div>
+              <div class="history-details">{{ historyDetails(c) }}</div>
+            </div>
+
+            <span class="pill" :class="pillClass(c)">{{ c.status }}</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer-spacer" aria-hidden="true"></div>
+
+    <footer class="site-footer">
+      <div class="site-footer__inner">
+        <nav class="site-footer__nav" aria-label="Footer">
+          <a href="./">Home</a>
+          <span class="site-footer__dot">·</span>
+          <a href="./demo.html">Demo</a>
+          <span class="site-footer__dot">·</span>
+          <a href="./about.html">About</a>
+        </nav>
+
+        <div class="site-footer__names">
+          Tej Sethi&nbsp;&nbsp;&nbsp;Ethan Welch&nbsp;&nbsp;&nbsp;Prajna Pendharkar
+        </div>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

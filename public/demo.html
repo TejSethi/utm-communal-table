@@ -1,0 +1,264 @@
+<!-- demo.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Page metadata -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Browser tab title -->
+  <title>Project Demo • UTM Communal Table</title>
+
+  <!-- Global stylesheet -->
+  <link rel="stylesheet" href="./css/styles.css" />
+
+  <!-- Petite Vue library -->
+  <script src="https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.iife.js"></script>
+
+  <!-- Demo page logic -->
+  <script type="module" src="./js/demo.petite.js" defer></script>
+
+  <!-- Global app helpers -->
+  <script type="module" src="./js/app.js" defer></script>
+</head>
+
+<body class="app-shell" data-page="demo" v-scope="DemoApp()" @vue:mounted="init()">
+  <!-- Top header -->
+  <header class="topbar topbar--solid">
+    <div class="topbar__inner">
+      <!-- Brand label -->
+      <div class="brand">UTM Communal Table</div>
+
+      <!-- Top navigation -->
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./">Home</a>
+
+        <!-- Active page -->
+        <a class="nav__link nav__link--active" href="./demo.html">Project Demo</a>
+
+        <a class="nav__link" href="./about.html">About Us</a>
+
+        <!-- Cart link and badge -->
+        <a class="nav__icon" id="cartBtn" href="./cart.html" aria-label="Cart">
+          🛒 <span id="cartCount" aria-label="Items in cart">(0)</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main page layout -->
+  <main class="board">
+    <!-- Left sidebar -->
+    <aside class="board__side">
+      <!-- Quick action -->
+      <a class="side-link side-link--top" href="./submit.html">
+        <span class="side-ic">✎</span>
+        <span>Create Post</span>
+      </a>
+
+      <!-- Sidebar navigation -->
+      <nav class="side-nav2" aria-label="App navigation">
+        <!-- Active page -->
+        <a class="side-link side-link--active" href="./demo.html">
+          <span class="side-ic">⌂</span><span>Home</span>
+        </a>
+
+        <a class="side-link" href="./claims.html">
+          <span class="side-ic">☐</span><span>Claims</span>
+        </a>
+        <a class="side-link" href="./impact.html">
+          <span class="side-ic">🏆</span><span>Impact</span>
+        </a>
+
+        <a class="side-link" href="./account.html">
+          <span class="side-ic">👤</span><span>Account</span>
+        </a>
+
+        <!-- Logout link -->
+        <a class="side-link" href="./" data-logout>
+          <span class="side-ic">⤴</span><span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <section class="board__main">
+      <!-- Filter tabs -->
+      <div class="tabs">
+        <!-- All filter -->
+        <button
+          class="tab"
+          :class="activeFilter==='All' ? 'tab--active' : ''"
+          type="button"
+          @click="setFilter('All')"
+        >
+          All
+        </button>
+
+        <!-- Category filters -->
+        <button
+          class="tab"
+          v-for="c in categories"
+          :key="'cat-'+c"
+          :class="activeFilter===c ? 'tab--active' : ''"
+          type="button"
+          @click="setFilter(c)"
+        >
+          {{ c }}
+        </button>
+
+        <!-- Diet filters -->
+        <button
+          class="tab"
+          v-for="d in diets"
+          :key="'diet-'+d"
+          :class="activeFilter===d ? 'tab--active' : ''"
+          type="button"
+          @click="setFilter(d)"
+        >
+          {{ d }}
+        </button>
+      </div>
+
+      <!-- Posts list -->
+      <div class="cards" id="demoPosts">
+        <!-- Empty state -->
+        <p class="muted" v-if="filteredPosts.length === 0">
+          No posts match this filter. Create one from Donate Food.
+        </p>
+
+        <!-- Post card -->
+        <article
+          class="post-card"
+          v-for="p in filteredPosts"
+          :key="p.id"
+          @click="open(p)"
+        >
+          <!-- Post image -->
+          <img class="post-img" :src="p.img" :alt="p.title" />
+
+          <div class="post-body">
+            <div class="post-top">
+              <!-- Status pill -->
+              <span
+                class="status"
+                :class="p.status === 'Claimed'
+                  ? 'status--claimed'
+                  : ((remainingQty(p.id) > 0) ? 'status--ok' : 'status--soon')"
+              >
+                {{ p.status === 'Claimed'
+                  ? 'Claimed'
+                  : (remainingQty(p.id) > 0 ? 'Available' : 'Unavailable') }}
+              </span>
+            </div>
+
+            <!-- Post title -->
+            <h3 class="post-title">{{ p.title }}</h3>
+
+            <!-- Post meta -->
+            <div class="post-meta">
+              <div class="meta-row">🕒 <span>{{ p.expiryText }}</span></div>
+              <div class="meta-row">Qty <span>{{ remainingQty(p.id) }}</span></div>
+            </div>
+
+            <!-- Post actions -->
+            <div class="post-actions">
+              <button
+                class="btn add-to-cart"
+                type="button"
+  :disabled="p.status === 'Claimed' || p.status === 'Discarded' || remainingQty(p.id) <= 0"                @click="addOne($event, p)"
+              >
+                Add to cart
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <!-- Post details modal -->
+  <div class="modal" id="postModal" :aria-hidden="!modalOpen">
+    <!-- Overlay -->
+    <div class="modal__overlay" @click="close()"></div>
+
+    <!-- Modal panel -->
+    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal__close" type="button" aria-label="Close" @click="close()">✕</button>
+
+      <div class="modal__content">
+        <!-- Modal image -->
+        <img class="modal__img" :src="selected?.img || ''" :alt="selected?.title || ''" />
+
+        <div class="modal__info">
+          <div class="modal__top">
+            <!-- Modal status -->
+            <span
+              class="status"
+              :class="selected?.status === 'Claimed'
+                ? 'status--claimed'
+                : ((selected?.id && remainingQty(selected.id) > 0) ? 'status--ok' : 'status--soon')"
+            >
+              {{ selected?.status === 'Claimed'
+                ? 'Claimed'
+                : ((selected?.id && remainingQty(selected.id) > 0) ? 'Available' : 'Unavailable') }}
+            </span>
+          </div>
+
+          <!-- Modal title -->
+          <h3 class="modal__title" id="modalTitle">{{ selected?.title || "Title" }}</h3>
+
+          <!-- Modal description -->
+          <p class="small" style="margin:0; color: rgba(0,0,0,.7); font-weight:600;">
+            {{ selected?.desc || "—" }}
+          </p>
+
+          <!-- Modal meta -->
+          <div class="modal__meta">
+  <div class="meta-row">🕒 <span>{{ selected?.expiryText || "Expiry" }}</span></div>
+  <div class="meta-row">Qty <span>{{ selected?.id ? remainingQty(selected.id) : 0 }}</span></div>
+
+  <div class="meta-row" v-if="(selected?.tags || []).length">
+    🏷️ <span>{{ (selected.tags || []).join(', ') }}</span>
+  </div>
+
+  <div class="meta-row" v-if="selected?.location">
+    📍 <span>{{ selected.location }}</span>
+  </div>
+</div>
+          <!-- Modal actions -->
+          <div class="modal__actions">
+            <button
+              class="btn"
+              type="button"
+              :disabled="!isSignedIn || selected?.status === 'Claimed' || selected?.status === 'Discarded' || !(selected?.id) || remainingQty(selected.id) <= 0"
+              @click="addOne($event, selected)"
+            >
+              Add to cart
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-spacer" aria-hidden="true"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a href="./">Home</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./demo.html">Demo</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./about.html">About</a>
+      </nav>
+
+      <div class="site-footer__names">
+        Tej Sethi&nbsp;&nbsp;&nbsp;Ethan Welch&nbsp;&nbsp;&nbsp;Prajna Pendharkar
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

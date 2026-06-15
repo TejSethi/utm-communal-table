@@ -1,0 +1,226 @@
+<!-- login.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Page metadata -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Browser tab title -->
+  <title>Log In • UTM Communal Table</title>
+
+  <!-- Global stylesheet -->
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+
+<body class="auth-page">
+  <!-- Top header -->
+  <header class="topbar">
+    <div class="topbar__inner">
+      <!-- Brand label -->
+      <div class="brand">UTM Communal Table</div>
+
+      <!-- Top navigation -->
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./">Home</a>
+
+        <!-- Link to demo page -->
+        <a class="nav__link" href="./demo.html">Project Demo</a>
+
+        <a class="nav__link" href="./about.html">About Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Centered page content -->
+  <main class="auth-wrap">
+    <!-- Login card -->
+    <section class="auth-card" aria-label="Log in">
+      <!-- Card header -->
+      <div class="auth-card__head">UTM Communal Table</div>
+
+      <!-- Login form -->
+      <form class="auth-card__body" id="loginForm" autocomplete="on">
+        <!-- Email field -->
+        <div>
+          <!-- Label and hint -->
+          <div class="auth-label-row">
+            <span>UofT Email</span>
+            <span class="auth-hint">@utoronto.ca</span>
+          </div>
+
+          <!-- Email input -->
+          <input
+            class="auth-input"
+            id="email"
+            type="email"
+            placeholder="name@mail.utoronto.ca"
+            required
+          />
+        </div>
+
+        <!-- Password field -->
+        <div>
+          <!-- Label and signup link -->
+          <div class="auth-label-row">
+            <span>Password</span>
+            <a class="auth-hint" href="./signup.html">Need one?</a>
+          </div>
+
+          <!-- Password input -->
+          <input
+            class="auth-input"
+            id="password"
+            type="password"
+            placeholder="••••••••"
+            minlength="6"
+            required
+          />
+        </div>
+
+        <!-- Demo button -->
+        <button class="auth-btn" type="submit">
+          Log in
+        </button>
+
+        <!-- Message area -->
+        <div id="msg" class="auth-hint auth-msg"></div>
+      </form>
+
+      <!-- Footer link -->
+      <div class="auth-footer">
+        Don’t have an account? <a href="./signup.html">Create profile</a>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    const PROFILE_KEY = "utm_profile";
+    const NEXT_KEY = "utm_next";
+    const ACCOUNTS_KEY = "utm_accounts_v1";
+
+    import { auth, db } from "./js/firebase.js";
+    import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    function safeJsonParse(raw, fallback) {
+      try { return JSON.parse(raw); } catch { return fallback; }
+    }
+
+    function setMsg(text) {
+      const el = document.getElementById("msg");
+      if (!el) return;
+      el.textContent = text || "";
+    }
+
+    function normalizeEmail(email) {
+      return String(email || "").trim().toLowerCase();
+    }
+
+    function isAllowedUofTEmail(email) {
+      const e = normalizeEmail(email);
+
+      //allowed domains:
+      //Student: @mail.utoronto.ca
+      //Professor: @utoronto.ca
+      //Professor (CS): @cs.toronto.edu
+      const allowed = [
+        "@mail.utoronto.ca",
+        "@utoronto.ca",
+        "@cs.toronto.edu",
+      ];
+
+      return allowed.some((d) => e.endsWith(d));
+    }
+
+    function roleFromEmail(email) {
+      const e = normalizeEmail(email);
+      if (e.endsWith("@mail.utoronto.ca")) return "Student";
+      return "Professor";
+    }
+
+    async function ensureUserDocOnLogin(user, email) {
+      //create users/{uid} if it does not exist, without overwriting existing data
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+
+      if (snap.exists()) return;
+
+      const role = roleFromEmail(email);
+
+      await setDoc(ref, {
+        email: String(email || ""),
+        first: "",
+        last: "",
+        postal: "",
+        role,
+        points: 0,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      });
+    }
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      setMsg("");
+
+      const email = normalizeEmail(document.getElementById("email").value);
+      const pw = String(document.getElementById("password").value || "");
+
+      if (!email || !email.includes("@")) {
+        setMsg("Please enter a valid email.");
+        return;
+      }
+
+      //domain gate at login too (better UX and prevents non-UofT logins)
+      if (!isAllowedUofTEmail(email)) {
+        setMsg("Please use a UofT email: @mail.utoronto.ca, @utoronto.ca, or @cs.toronto.edu.");
+        return;
+      }
+
+      if (pw.length < 6) {
+        setMsg("Password must be at least 6 characters.");
+        return;
+      }
+
+      let cred;
+      try {
+        cred = await signInWithEmailAndPassword(auth, email, pw);
+      } catch (err) {
+        const code = String(err?.code || "");
+        if (code === "auth/invalid-credential") setMsg("Incorrect email or password.");
+        else if (code === "auth/user-not-found") setMsg("No account found. Create a profile first.");
+        else if (code === "auth/wrong-password") setMsg("Incorrect email or password.");
+        else if (code === "auth/too-many-requests") setMsg("Too many attempts. Try again later.");
+        else setMsg("Could not log in. Try again.");
+        return;
+      }
+
+      //ensure Firestore user doc exists (for points/role/notifications)
+      try {
+        await ensureUserDocOnLogin(cred.user, email);
+      } catch (err) {
+        console.error("ensureUserDocOnLogin failed:", err);
+        setMsg("Logged in, but user setup failed.");
+        return;
+      }
+
+      //load profile into local cache for existing pages
+      let profile = null;
+      try {
+        const snap = await getDoc(doc(db, "users", cred.user.uid));
+        profile = snap.exists() ? snap.data() : { email };
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+      } catch (err) {
+        console.error("Profile load failed:", err);
+        setMsg("Logged in, but profile load failed.");
+        return;
+      }
+
+      const next = localStorage.getItem(NEXT_KEY) || "./demo.html";
+      try { localStorage.removeItem(NEXT_KEY); } catch {}
+      window.location.href = next;
+    });
+  </script>
+</body>
+</html>
