@@ -1,0 +1,174 @@
+<!-- cart.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Page metadata -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Browser tab title -->
+  <title>Cart • UTM Communal Table</title>
+
+  <!-- Global stylesheet -->
+  <link rel="stylesheet" href="./css/styles.css" />
+
+  <!-- Petite Vue library -->
+  <script src="https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.iife.js" defer></script>
+
+  <!-- Cart page logic -->
+  <script type="module" src="./js/cart.petite.js" defer></script>
+
+  <!-- Global app helpers -->
+  <script type="module" src="./js/app.js" defer></script>
+</head>
+
+<body class="app-shell" data-page="cart">
+  <!-- Top header -->
+  <header class="topbar topbar--solid">
+    <div class="topbar__inner">
+      <!-- Brand label -->
+      <div class="brand">UTM Communal Table</div>
+
+      <!-- Top navigation -->
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./">Home</a>
+        <a class="nav__link" href="./demo.html">Project Demo</a>
+        <a class="nav__link" href="./about.html">About Us</a>
+
+        <!-- Active page and cart badge -->
+        <a class="nav__icon nav__link--active" href="./cart.html" aria-label="Cart">
+          🛒 <span id="cartCount" aria-label="Items in cart">(0)</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page layout -->
+  <main class="board" v-scope="CartApp()" @vue:mounted="init()">
+    <!-- Left sidebar -->
+    <aside class="board__side">
+      <!-- Quick action -->
+      <a class="side-link side-link--top" href="./submit.html">
+        <span class="side-ic">✎</span>
+        <span>Create Post</span>
+      </a>
+
+      <!-- Sidebar navigation -->
+      <nav class="side-nav2" aria-label="App navigation">
+        <a class="side-link" href="./demo.html">
+          <span class="side-ic">⌂</span><span>Home</span>
+        </a>
+
+        <a class="side-link" href="./claims.html">
+          <span class="side-ic">☐</span><span>Claims</span>
+        </a>
+
+       
+
+        <a class="side-link" href="./impact.html">
+          <span class="side-ic">🏆</span><span>Impact</span>
+        </a>
+
+        <a class="side-link" href="./account.html">
+          <span class="side-ic">👤</span><span>Account</span>
+        </a>
+
+   
+
+        <!-- Logout link -->
+        <a class="side-link" href="#" data-logout>
+          <span class="side-ic">⤴</span><span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <section class="board__main">
+      <!-- Page header -->
+      <div class="section-head">
+        <h2 class="section-title">Cart</h2>
+        <a class="see-all" href="./demo.html">Back to posts</a>
+      </div>
+
+      <!-- Cart content -->
+      <div class="cart-wrap">
+        <!-- Empty state -->
+        <div id="cartEmpty" class="card-like" v-show="cart.length === 0">
+          <h3 class="cart-h">Your cart is empty</h3>
+          <p class="small">Go back to the board and add an item.</p>
+          <a class="btn btn--primary" href="./demo.html">Browse posts</a>
+        </div>
+
+        <!-- Cart items list -->
+        <div id="cartList" class="cart-list" aria-label="Cart items" v-show="cart.length > 0">
+          <div class="cart-row" v-for="it in cart" :key="it.id">
+            <!-- Item image -->
+            <div class="cart-row__img">
+              <img :src="displayImg(it) || './img/placeholder.png'" :alt="it.title || 'Item'" />
+            </div>
+
+            <!-- Item details -->
+            <div class="cart-row__info">
+              <div class="cart-row__title">{{ it.title || "Item" }}</div>
+              <div class="small">Qty in cart: <strong>{{ it.qty }}</strong></div>
+            </div>
+
+            <!-- Quantity controls -->
+            <div class="cart-row__actions">
+              <button class="btn btn--tiny btn--ghost" type="button" @click="dec(it)">−</button>
+
+              <button
+                class="btn btn--tiny btn--ghost"
+                type="button"
+                :disabled="it.qty >= available(it)"
+                @click="inc(it)"
+              >+</button>
+
+              <!-- Remove item -->
+              <button class="btn btn--tiny btn--ghost" type="button" @click="remove(it)">Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary and actions -->
+        <div id="cartSummary" class="cart-summary" v-show="cart.length > 0">
+          <div class="cart-summary__row">
+            <span>Total items</span>
+            <strong id="cartTotalItems">{{ totalItems }}</strong>
+          </div>
+            <!-- Clearing the items in the cart -->
+
+          <div class="cart-summary__actions">
+  <button class="btn btnC" id="clearCartBtn" type="button" @click="clearCart()">
+    Clear cart
+  </button>
+
+  <button type="button" class="btn btnC" @click="claimNow()">
+    Confirm
+  </button>
+</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer-spacer" aria-hidden="true"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a href="./">Home</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./demo.html">Demo</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./about.html">About</a>
+      </nav>
+
+      <div class="site-footer__names">
+        Tej Sethi&nbsp;&nbsp;&nbsp;Ethan Welch&nbsp;&nbsp;&nbsp;Prajna Pendharkar
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

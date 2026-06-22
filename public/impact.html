@@ -1,0 +1,174 @@
+<!-- impact.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Impact • UTM Communal Table</title>
+  <link rel="stylesheet" href="./css/styles.css" />
+
+  <!-- Petite Vue library -->
+  <script src="https://unpkg.com/petite-vue@0.4.1/dist/petite-vue.iife.js" defer></script>
+
+  <!-- Impact page logic -->
+  <script type="module" src="./js/impact.petite.js" defer></script>
+
+  <!-- Global app helpers -->
+  <script type="module" src="./js/app.js" defer></script>
+</head>
+
+<body class="app-shell" data-page="impact">
+  <!-- Top header -->
+  <header class="topbar topbar--solid">
+    <div class="topbar__inner">
+      <div class="brand">UTM Communal Table</div>
+
+      <!-- Top navigation -->
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./">Home</a>
+        <a class="nav__link" href="./demo.html">Project Demo</a>
+        <a class="nav__link" href="./about.html">About Us</a>
+
+       
+
+        <!-- Cart badge -->
+        <a class="nav__icon" href="./cart.html" aria-label="Cart">
+          🛒 <span id="cartCount" aria-label="Items in cart">(0)</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page layout -->
+  <main class="board" v-scope="ImpactApp()" @vue:mounted="init()">
+    <!-- Left sidebar -->
+    <aside class="board__side">
+      <!-- Create a new post -->
+      <a class="side-link side-link--top" href="./submit.html">
+        <span class="side-ic">✎</span>
+        <span>Create Post</span>
+      </a>
+
+      <!-- Sidebar navigation -->
+      <nav class="side-nav2" aria-label="App navigation">
+        <a class="side-link" href="./demo.html">
+          <span class="side-ic">⌂</span><span>Home</span>
+        </a>
+
+        <a class="side-link" href="./claims.html">
+          <span class="side-ic">☐</span><span>Claims</span>
+        </a>
+
+        <!-- Active page -->
+        <a class="side-link side-link--active" href="./impact.html">
+          <span class="side-ic">🏆</span><span>Impact</span>
+        </a>
+
+        <a class="side-link" href="./account.html">
+          <span class="side-ic">👤</span><span>Account</span>
+        </a>
+
+        <!-- Logout link -->
+        <a class="side-link" href="./" data-logout>
+          <span class="side-ic">⤴</span><span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <section class="board__main">
+      <div class="impact-header">
+        <h2 class="impact-greeting">Good {{ timeOfDay }}, {{ firstName }}</h2>
+      </div>
+
+      <div class="impact-tiles">
+        <article class="impact-tile" aria-label="Points">
+          <div class="impact-tile__icon">🥕</div>
+          <div class="impact-tile__value">{{ points }} Points</div>
+          <div class="impact-tile__label">Your available balance</div>
+        </article>
+
+        <article class="impact-tile" aria-label="Saves">
+          <div class="impact-tile__icon">🥕</div>
+          <div class="impact-tile__value">{{ saves }} Saves</div>
+          <div class="impact-tile__label">Food items saved from going to waste</div>
+        </article>
+      </div>
+
+      <hr class="impact-divider" />
+
+      <h3 class="impact-section-title">Rewards</h3>
+
+      <article class="reward-card" aria-label="Reward preview">
+        <img class="reward-img" src="./img/impact1.png" alt="Reward image" />
+
+        <div class="reward-bottom">
+          <div class="reward-text">
+            <div class="reward-title">Free Coffee (Tim Hortons)</div>
+            <div class="reward-sub">Costs 20 points</div>
+            <div class="reward-sub" v-if="error">{{ error }}</div>
+          </div>
+
+          <button
+            class="reward-btn"
+            type="button"
+            @click="redeemCoffee()"
+            :disabled="loading || points < 20"
+            aria-label="Redeem reward"
+          >
+            Redeem
+          </button>
+        </div>
+      </article>
+
+      <!-- showing reward popup -->
+      <div
+        class="reward-modal"
+        v-show="rewardOpen"
+        @click="closeReward()"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Reward popup"
+      >
+        <div class="reward-modal__panel" @click.stop>
+          <div class="reward-modal__head">
+            <div class="reward-modal__title">Free Coffee (Tim Hortons)</div>
+            <button class="reward-modal__close" type="button" @click="closeReward()" aria-label="Close">×</button>
+          </div>
+
+          <div class="reward-modal__body">
+            <img class="reward-modal__qr" src="./img/qr.png" alt="Reward QR code" />
+
+            <div class="reward-modal__codeLabel">Redemption Code</div>
+            <div class="reward-modal__code">{{ rewardToken }}</div>
+
+          </div>
+
+          <div class="reward-modal__foot">
+            <button class="reward-btn" type="button" @click="closeReward()">Close</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="footer-spacer" aria-hidden="true"></div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a href="./">Home</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./demo.html">Demo</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./about.html">About</a>
+      </nav>
+
+      <div class="site-footer__names">
+        Tej Sethi&nbsp;&nbsp;&nbsp;Ethan Welch&nbsp;&nbsp;&nbsp;Prajna Pendharkar
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
