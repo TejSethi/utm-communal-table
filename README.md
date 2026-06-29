@@ -16,3 +16,6 @@ Before running this project locally, please ensure you have the following instal
 2. ```bash
    npm install
    ```
+3. Set up firebase
+   - test1
+   - test2 
