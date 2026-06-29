@@ -39,11 +39,13 @@ Before running this project locally, please ensure you have the following instal
 
 ## Usage 
 After opening the website, users can create an account or login to their existing account. We have two different work flows. One for donating food, and the other one for claiming food.
+
 For food donor workflow, this consists of:
 - Signup and login
 - Enter food posting details and submit the food
 - Collect points when users claim donated food
-- Redeem points for coffee
+- Redeem points for coffee'
+
 For food receiver workflow, this consists of:
 - Signup and login
 - Explore available food on food board
@@ -51,4 +53,5 @@ For food receiver workflow, this consists of:
 - Add food to cart
 - Claim food
 - View claim tracking and history
+
 Users can also visit their profile / account management page to view / modify their information. 
