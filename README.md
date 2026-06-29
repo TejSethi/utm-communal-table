@@ -44,7 +44,7 @@ For food donor workflow, this consists of:
 - Signup and login
 - Enter food posting details and submit the food
 - Collect points when users claim donated food
-- Redeem points for coffee'
+- Redeem points for rewards
 
 For food receiver workflow, this consists of:
 - Signup and login
