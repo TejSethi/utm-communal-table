@@ -1,0 +1,142 @@
+<!-- account.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account • UTM Communal Table</title>
+
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script type="module" src="./js/app.js" defer></script>
+</head>
+
+<body class="app-shell" data-page="account">
+  <header class="topbar topbar--solid">
+    <div class="topbar__inner">
+      <div class="brand">UTM Communal Table</div>
+
+      <nav class="nav" aria-label="Primary">
+        <a class="nav__link" href="./">Home</a>
+        <a class="nav__link" href="./demo.html">Project Demo</a>
+        <a class="nav__link" href="./about.html">About Us</a>
+
+        <a class="nav__icon" id="cartBtn" href="./cart.html" aria-label="Cart">
+          🛒 <span id="cartCount" aria-label="Items in cart">(0)</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="board">
+    <aside class="board__side">
+      <a class="side-link side-link--top" href="./submit.html">
+        <span class="side-ic">✎</span>
+        <span>Create Post</span>
+      </a>
+
+      <nav class="side-nav2" aria-label="App navigation">
+        <a class="side-link" href="./demo.html">
+          <span class="side-ic">⌂</span><span>Home</span>
+        </a>
+
+        <a class="side-link" href="./claims.html">
+          <span class="side-ic">☐</span><span>Claims</span>
+        </a>
+
+        <a class="side-link" href="./impact.html">
+          <span class="side-ic">🏆</span><span>Impact</span>
+        </a>
+
+        <a class="side-link side-link--active" href="./account.html">
+          <span class="side-ic">👤</span><span>Account</span>
+        </a>
+
+        <a class="side-link" href="./" data-logout>
+          <span class="side-ic">⤴</span><span>Logout</span>
+        </a>
+      </nav>
+    </aside>
+
+    <section class="board__main">
+      <div class="account-header">
+        <div>
+          <h2 class="account-title">Account</h2>
+          <p class="account-sub">Manage your profile and preferences</p>
+        </div>
+      </div>
+
+      <section class="panel account-panel-center" aria-label="Profile panel">
+        <div class="profile-row">
+          <div class="avatar" id="avatar" aria-label="Avatar">U</div>
+
+          <div>
+            <p class="profile-name" id="profileName">User</p>
+
+            <div class="profile-meta">
+              <div id="profileEmail">—</div>
+              <div id="profileLocation">—</div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="panel-title">Profile details</h3>
+
+        <div class="field-grid">
+          <div class="row-2">
+            <div class="field">
+              <label for="first">First name</label>
+              <input id="first" type="text" value="" />
+            </div>
+
+            <div class="field">
+              <label for="last">Last name</label>
+              <input id="last" type="text" value="" />
+            </div>
+          </div>
+
+          <!-- Email should be read-only (Auth controls identity) -->
+          <div class="field field--email-pad">
+            <label for="email">Email (read-only)</label>
+            <input id="email" type="email" value="" readonly />
+          </div>
+
+          <div class="row-2">
+            <!-- Postal required -->
+            <div class="field">
+              <label for="postal">Postal code (GTA)</label>
+              <input id="postal" type="text" value="" required placeholder="M5S 1A1" />
+            </div>
+
+            <!-- Role should be read-only (computed from email domain) -->
+            <div class="field">
+              <label for="role">Role (read-only)</label>
+              <input id="role" type="text" value="Student" readonly />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn" id="saveBtn" type="button">Save changes</button>
+            <button class="btn" id="pwdBtn" type="button">Change password</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <nav class="site-footer__nav" aria-label="Footer">
+        <a href="./">Home</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./demo.html">Demo</a>
+        <span class="site-footer__dot">·</span>
+        <a href="./about.html">About</a>
+      </nav>
+
+      <div class="site-footer__names">
+        Tej Sethi&nbsp;&nbsp;&nbsp;Ethan Welch&nbsp;&nbsp;&nbsp;Prajna Pendharkar
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
