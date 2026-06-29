@@ -17,7 +17,7 @@ Before running this project locally, please ensure you have the following instal
    npm install
    ```
 3. Set Up Firebase
-Create a Firebase project and enable the following services:
+  Create a Firebase project and enable the following services:
    - Firebase Authentication
    - Firebase Firestore
    - Firebase Hosting
