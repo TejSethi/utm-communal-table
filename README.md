@@ -18,10 +18,10 @@ Before running this project locally, please ensure you have the following instal
    ```
 3. Set Up Firebase
 
-Create a Firebase project and enable the following services:
-   - Firebase Authentication
-   - Firebase Firestore
-   - Firebase Hosting
+   Create a Firebase project and enable the following services:
+      - Firebase Authentication
+      - Firebase Firestore
+      - Firebase Hosting
 5. Run The Project Locally
    ```bash
    npx serve public 
