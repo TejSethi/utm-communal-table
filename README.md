@@ -26,3 +26,28 @@ Create a Firebase project and enable the following services:
    npx serve public 
    ```
 5. Open `public/index.html` in your browser
+
+## Features 
+- User signup and login
+- Food board (updates current inventory dynamically) 
+- Cart system
+- Food claiming (includes tracking interface)
+- Food impact page (i.e. point redemption system)
+- User profile and account management page
+- Firebase Firestore Database
+
+## Usage 
+After opening the website, users can create an account or login to their existing account. We have two different work flows. One for donating food, and the other one for claiming food.
+For food donor workflow, this consists of:
+- Signup and login
+- Enter food posting details and submit the food
+- Collect points when users claim donated food
+- Redeem points for coffee
+For food receiver workflow, this consists of:
+- Signup and login
+- Explore available food on food board
+- View food details
+- Add food to cart
+- Claim food
+- View claim tracking and history
+Users can also visit their profile / account management page to view / modify their information. 
